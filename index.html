@@ -3,13 +3,25 @@
 
 	<head>
 		<title>Search</title>
+
+		<link rel="stylesheet" href="css/search.css">
 	</head>
 
 	<body>
+		<div class="navigation">
+			<a href="image_search.html">Image Search</a>
+			<a href="advanced_search.html">Advanced Search</a>
+		</div>
+
 		<form action="https://google.com/search">
+			<img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google logo">
 			<input type="text" name="q">
-			<input type="submit" value="Google Search">
+			<div class="submit">
+				<input type="submit" value="Google Search">
+				<input type="submit" value="I'm Feeling Lucky">
+			</div>
 		</form>
+		<div style="height: 1em;"></div>
 	</body>
 
 </html>
