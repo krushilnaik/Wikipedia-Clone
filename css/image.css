@@ -37,7 +37,7 @@ form {
 	}
 	form .submit {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr;
 		column-gap: 5px;
 		align-items: center;
 		justify-items: center;
