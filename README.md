@@ -1,6 +1,6 @@
 # krushilnaik
 
-### The first assignment of CS50’s "Web Programming with Python and JavaScript", this is an attempt to replicate some of Google's various search pages (they're still doing the heavy lifting).
+### The first assignment of Harvard CS50’s "Web Programming with Python and JavaScript". This is an attempt to replicate some of Google's various search pages (they're still doing the heavy lifting).
 
 # 
 
@@ -22,4 +22,4 @@ Like Google’s own, your search bar should be centered with rounded corners. Th
 - [x] **Aesthetics.** The CSS you write should match Google’s own aesthetics as best as possible.
 
 # Bugs:
-- The "I'm Feeling Lucky" button shows a redirect warning before taking you to the first Google result 
+- The "I'm Feeling Lucky" button shows a redirect warning before taking you to the first Google result
