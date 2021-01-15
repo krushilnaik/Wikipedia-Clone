@@ -2,6 +2,8 @@
 
 ### The first assignment of CS50’s "Web Programming with Python and JavaScript", this is an attempt to replicate some of Google's various search pages (they're still doing the heavy lifting).
 
+# 
+
 Checklist of requirements:
 
 - [x] **Pages.** Your website should have at least three pages: one for Google Search, one for Google Image Search, and one for Google Advanced Search.
@@ -21,5 +23,5 @@ Like Google’s own, your search bar should be centered with rounded corners. Th
 
 
 
-Bugs:
-- The "I'm feeling lucky" button shows a redirect warning before taking you to the first Google result 
+# Bugs:
+- The "I'm Feeling Lucky" button shows a redirect warning before taking you to the first Google result 
