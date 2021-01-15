@@ -1,23 +1,25 @@
 * {
-	font-family: Arial, sans-serif;
+	font-family: arial, sans-serif;
 }
 
 body {
 	display: grid;
+	grid-template-rows: 3em 3em 1em auto;
+	align-items: center;
 }
 
 .navigation {
 	justify-self: right;
 	line-height: 1em;
+	background-color: cornflowerblue;
+	width: max-content;
+	padding: 5px;
 }
 	.navigation a {
+		color: white;
 		padding: 5px;
 		text-decoration: none;
-		color: darkslategray;
 	}
-		.navigation a:hover {
-			text-decoration: underline;
-		}
 
 form {
 	margin-left: 10px;
@@ -37,13 +39,16 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 10px;
 }
 
-h1 {
-	color: red;
+.title {
+	color: #d93025;
 }
 
 input {
 	line-height: 1.5em;
 }
+	input:focus {
+		outline-color: cornflowerblue;
+	}
 
 #submit {
 	position: absolute;
