@@ -49,6 +49,7 @@ input[type="text"] {
 	border-radius: 25px;
 	border: 1px solid rgb(193, 194, 194);
 	width: 750px;
+	outline: none;
 }
 
 input[type="submit"] {
