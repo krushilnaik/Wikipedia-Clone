@@ -86,9 +86,7 @@ def entry(request, title):
 			if not tagFound:
 				content += createTag("p", line.rstrip())
 
-	content = content.replace("><", ">\n<")
-
 	return render(request, "encyclopedia/entry.html", {
-		title: title,
-		content: content
+		"title": title,
+		"content": content
 	})
