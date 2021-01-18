@@ -11,7 +11,6 @@ def index(request):
 		"entries": util.list_entries()
 	})
 
-
 def entry(request, title):
 	def createTag(tagType, content, **kwargs):
 		attributes = " ".join([f"{k}=\"{v}\"" for k, v in kwargs.items()])
