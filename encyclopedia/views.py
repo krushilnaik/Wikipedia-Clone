@@ -1,6 +1,4 @@
 import re
-# from typing import Pattern, OrderedDict
-# from collections import OrderedDict
 from django.shortcuts import render
 
 from . import util
