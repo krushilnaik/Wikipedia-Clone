@@ -61,5 +61,6 @@ def entry(request, title):
 						pass
 
 	return render(request, "encyclopedia/entry.html", {
-		title: title
+		title: title,
+		content: content
 	})
