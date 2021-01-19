@@ -91,14 +91,6 @@ def entry(request, title):
 	})
 
 def random_page(request):
-	# entries = []
-	# for mdFile in glob("entries/*.md"):
-	# 	entryTitle = os.path.split(mdFile)[-1][:-3]
-	# 	entries.append(entryTitle)
 	entries = util.list_entries()
-
 	redirect = random.choice(entries)
-
-	print(redirect)
-
 	return entry(request, redirect)
