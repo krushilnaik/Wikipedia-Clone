@@ -20,12 +20,14 @@ def entry(request, title):
 	boldItalicRegex = re.compile(r"([*_]{3}[^*_]+?[*_]{3})")
 	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
 	headerRegex     = re.compile(r"^(#{1,6} .+)")
+	codeRegex       = re.compile(r"(```.*```)")
 
 	regexList = [
 		anchorRegex,
 		boldItalicRegex,
 		boldRegex, italicRegex,
 		headerRegex, listItemRegex,
+		codeRegex
 	]
 
 	masterRegex = "|".join([regex.pattern for regex in regexList])
@@ -59,6 +61,8 @@ def entry(request, title):
 				text = match[1:match.index("]")]
 				link = match[match.index("(")+1:-1]
 				content += createTag("a", text, href=link)
+			elif codeRegex.match(match):
+				content += createTag("code", match[3:-3])
 			elif listItemRegex.match(match):
 				currentListLevel = 0
 				while match[currentListLevel] == " ":
