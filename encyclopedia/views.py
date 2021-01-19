@@ -1,8 +1,15 @@
 import re, random
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from django import forms
 
 from . import util
 
+class CreatePageForm(forms.Form):
+	pageTitle = forms.CharField(label="")
+	pageContent = forms.CharField(label="", widget=forms.Textarea(attrs={
+		"placeholder": "Page content:"
+	}))
 
 def index(request):
 	return render(request, "encyclopedia/index.html", {
@@ -92,4 +99,15 @@ def random_page(request):
 	return entry(request, redirect)
 
 def create_page(request):
-	return render(request, "encyclopedia/create_page.html")
+	form = CreatePageForm(request.POST or None)
+
+	if request.method == "POST" and form.is_valid():
+		title = form.cleaned_data["pageTitle"]
+		content = form.cleaned_data["pageContent"]
+		util.save_entry(title, content)
+
+		return HttpResponseRedirect(title)
+
+	return render(request, "encyclopedia/create_page.html", {
+		"form": form
+	})
