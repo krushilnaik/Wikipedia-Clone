@@ -1,4 +1,5 @@
-import re
+import re, random, os
+from glob import glob
 from django.shortcuts import render
 
 from . import util
@@ -15,9 +16,9 @@ def entry(request, title):
 		return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
 
 	anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
-	italicRegex     = re.compile(r"( [*_]{1}[^*_]+?[*_]{1})")
-	boldRegex       = re.compile(r"( [*_]{2}[^*_]+?[*_]{2})")
-	boldItalicRegex = re.compile(r"( [*_]{3}[^*_]+?[*_]{3})")
+	italicRegex     = re.compile(r"([*_]{1}[^*_]+?[*_]{1})")
+	boldRegex       = re.compile(r"([*_]{2}[^*_]+?[*_]{2})")
+	boldItalicRegex = re.compile(r"([*_]{3}[^*_]+?[*_]{3})")
 	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
 	headerRegex     = re.compile(r"^(#{1,6} .+)")
 
@@ -81,13 +82,22 @@ def entry(request, title):
 				for _ in range(previousListLevel + 1):
 					previousListLevel -= 1
 					content += "</ul>"
-			elif tagFound:
+			else:
 				content += createTag("span", match)
-
-		if not tagFound:
-			content += createTag("p", line.rstrip())
 
 	return render(request, "encyclopedia/entry.html", {
 		"title": title,
 		"content": content
 	})
+
+def random_page(request):
+	entries = []
+	for mdFile in glob("entries/*.md"):
+		entryTitle = os.path.split(mdFile)[-1][:-3]
+		entries.append(entryTitle)
+
+	redirect = random.choice(entries)
+
+	print(redirect)
+
+	return entry(request, redirect)
