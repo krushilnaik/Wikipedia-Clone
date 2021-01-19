@@ -38,7 +38,6 @@ def entry(request, title):
 
 	previousListLevel = -1
 	for line in data:
-		tagFound = False
 		if not line.rstrip():
 			continue
 		matches = masterRegex.split(line.rstrip())
@@ -46,28 +45,22 @@ def entry(request, title):
 			if not match:
 				continue
 			if headerRegex.match(match):
-				tagFound = True
 				cutoff = match.index("# ") + 1
 				content += createTag(f"h{cutoff}", match[cutoff+1:])
 			elif boldItalicRegex.match(match):
-				tagFound = True
 				content += createTag(
 					"strong",
 					createTag("em", match.strip()[3:-3])
 				)
 			elif boldRegex.match(match):
-				tagFound = True
 				content += createTag("strong", match.strip()[2:-2])
 			elif italicRegex.match(match):
-				tagFound = True
 				content += createTag("em", match.strip()[1:-1])
 			elif anchorRegex.match(match):
-				tagFound = True
 				text = match[1:match.index("]")]
 				link = match[match.index("(")+1:-1]
 				content += createTag("a", text, href=link)
 			elif listItemRegex.match(match):
-				tagFound = True
 				currentListLevel = 0
 				while match[currentListLevel] == " ":
 					currentListLevel += 1
