@@ -14,13 +14,13 @@ def entry(request, title):
 		attributes = " ".join([f"{k}=\"{v}\"" for k, v in kwargs.items()])
 		return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
 
-	anchorRegex     = r"(\[.+?\]\(.+?\))"
-	italicRegex     = r"([*_]{1}[^*_]+?[*_]{1})"
-	boldRegex       = r"([*_]{2}[^*_]+?[*_]{2})"
-	boldItalicRegex = r"([*_]{3}[^*_]+?[*_]{3})"
-	listItemRegex   = r"^( *[*-]{1} .+)"
-	headerRegex     = r"^(#{1,6} .+)"
-	codeRegex       = r"(```.*```)"
+	anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
+	italicRegex     = re.compile(r"([*_]{1}[^*_]+?[*_]{1})")
+	boldRegex       = re.compile(r"([*_]{2}[^*_]+?[*_]{2})")
+	boldItalicRegex = re.compile(r"([*_]{3}[^*_]+?[*_]{3})")
+	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
+	headerRegex     = re.compile(r"^(#{1,6} .+)")
+	codeRegex       = re.compile(r"(```.*```)")
 
 	regexList = [
 		anchorRegex,
@@ -30,7 +30,7 @@ def entry(request, title):
 		codeRegex
 	]
 
-	masterRegex = "|".join([regex for regex in regexList])
+	masterRegex = "|".join([regex.pattern for regex in regexList])
 	masterRegex = re.compile(masterRegex)
 
 	content = ""
