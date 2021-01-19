@@ -1,5 +1,4 @@
-import re, random, os
-from glob import glob
+import re, random
 from django.shortcuts import render
 
 from . import util
