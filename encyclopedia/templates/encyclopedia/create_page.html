@@ -4,6 +4,7 @@
 
 {% block body %}
 	<form style="display: flex; flex-direction: column;" action="" method="post">
+		{% csrf_token %}
 		<input type="text" name="title" id="title" placeholder="Page title:" style="width: 30em; margin: 5px;">
 		<textarea name="markdown-content" id="markdown-content" placeholder="Page content:" style="margin: 5px;"></textarea>
 		<input type="submit" value="Create Page" style="width: fit-content; justify-self: right; margin: 5px;">
