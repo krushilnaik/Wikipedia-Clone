@@ -90,3 +90,6 @@ def random_page(request):
 	entries = util.list_entries()
 	redirect = random.choice(entries)
 	return entry(request, redirect)
+
+def create_page(request):
+	return render(request, "encyclopedia/create_page.html")
