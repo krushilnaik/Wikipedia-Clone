@@ -101,6 +101,8 @@ def random_page(request):
 def create_page(request):
 	form = CreatePageForm(request.POST or None)
 
+	# TODO: error message when trying to create a page that already exists
+
 	if request.method == "POST" and form.is_valid():
 		title = form.cleaned_data["pageTitle"]
 		content = form.cleaned_data["pageContent"]
