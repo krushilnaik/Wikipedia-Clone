@@ -1,4 +1,5 @@
 import re, random
+
 from django.http.response import HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
@@ -46,10 +47,6 @@ def index(request):
 	})
 
 def entry(request, title):
-	def createTag(tagType, content, **kwargs):
-		attributes = " ".join([f"{k}=\"{v}\"" for k, v in kwargs.items()])
-		return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
-
 	anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
 	italicRegex     = re.compile(r"([*_]{1}[^*_]+?[*_]{1})")
 	boldRegex       = re.compile(r"([*_]{2}[^*_]+?[*_]{2})")
@@ -61,60 +58,75 @@ def entry(request, title):
 	masterRegex = [
 		anchorRegex, boldItalicRegex,
 		boldRegex, italicRegex,
-		headerRegex, listItemRegex,
 		codeRegex
 	]
 
 	masterRegex = "|".join([regex.pattern for regex in masterRegex])
 	masterRegex = re.compile(masterRegex)
 
-	content = ""
 
-	data = util.get_entry(title).split("\n")
+	def createTag(tagType, content, **kwargs):
+		attributes = " ".join([f"{k}=\"{v}\"" for k, v in kwargs.items()])
+		return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
 
-	previousListLevel = -1
-	for line in data:
-		if not line.rstrip():
-			continue
-		matches = masterRegex.split(line.rstrip())
+	def parseLine(raw_string):
+		htmlBuilder = ""
+
+		matches = masterRegex.split(raw_string)
+
 		for match in matches:
 			if not match:
 				continue
 			if headerRegex.match(match):
 				cutoff = match.index("# ") + 1
-				content += createTag(f"h{cutoff}", match[cutoff+1:])
+				htmlBuilder += createTag(f"h{cutoff}", match[cutoff+1:])
 			elif boldItalicRegex.match(match):
-				content += createTag(
+				htmlBuilder += createTag(
 					"strong",
 					createTag("em", match.strip()[3:-3])
 				)
 			elif boldRegex.match(match):
-				content += createTag("strong", match.strip()[2:-2])
+				htmlBuilder += createTag("strong", match.strip()[2:-2])
 			elif italicRegex.match(match):
-				content += createTag("em", match.strip()[1:-1])
+				htmlBuilder += createTag("em", match.strip()[1:-1])
 			elif anchorRegex.match(match):
 				text = match[1:match.index("]")]
 				link = match[match.index("(")+1:-1]
-				content += createTag("a", text, href=link)
+				htmlBuilder += createTag("a", text, href=link)
 			elif codeRegex.match(match):
-				content += createTag("code", match[3:-3])
-			elif listItemRegex.match(match):
-				currentListLevel = 0
-				while match[currentListLevel] == " ":
-					currentListLevel += 1
-				currentListLevel //= 2
-				if currentListLevel > previousListLevel:
-					content += "<ul>"
-				elif currentListLevel < previousListLevel:
-					content += "</ul>"
-				content += createTag("li", match[currentListLevel*2+2:])
-				previousListLevel = currentListLevel
-			elif previousListLevel != -1:
-				for _ in range(previousListLevel + 1):
-					previousListLevel -= 1
-					content += "</ul>"
+				htmlBuilder += createTag("code", match[3:-3])
 			else:
-				content += createTag("span", match)
+				htmlBuilder += createTag("span", match)
+
+		return htmlBuilder
+
+	content = ""
+	data = util.get_entry(title).split("\n")
+	previousListLevel = 0
+
+	for line in data:
+		if not line.rstrip():
+			continue
+		if previousListLevel != 0 or listItemRegex.match(line):
+			currentListLevel = 0
+			while line[currentListLevel] == " ":
+				currentListLevel += 1
+			currentListLevel //= 2
+			if currentListLevel > previousListLevel:
+				content += "<ul>"
+			elif currentListLevel < previousListLevel:
+				content += "</ul>"
+			content += createTag(
+				"li",
+				parseLine(line[currentListLevel*2+2:])
+			)
+			previousListLevel = currentListLevel
+		elif previousListLevel != 0:
+			for _ in range(previousListLevel + 1):
+				previousListLevel -= 1
+				content += "</ul>"
+		else:
+			content += createTag("div", parseLine(line))
 
 	return render(request, "encyclopedia/entry.html", {
 		"title": title,
