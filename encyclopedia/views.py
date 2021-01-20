@@ -134,7 +134,7 @@ def create_page(request):
 		title = form.cleaned_data["pageTitle"]
 		content = form.cleaned_data["pageContent"]
 
-		# These qutation characters were causing problems
+		# These quotation characters were causing problems
 		# replace them with a "normal" version
 		content = content.replace("“", "\"")
 		content = content.replace("”", "\"")
