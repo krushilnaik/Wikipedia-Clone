@@ -51,9 +51,9 @@ def entry(request, title):
 		return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
 
 	anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
-	italicRegex     = re.compile(r"([*_]{1}[^*_]+?[*_]{1})")
-	boldRegex       = re.compile(r"([*_]{2}[^*_]+?[*_]{2})")
-	boldItalicRegex = re.compile(r"([*_]{3}[^*_]+?[*_]{3})")
+	italicRegex     = re.compile(r"( [*_]{1}[^*_]+?[*_]{1} )")
+	boldRegex       = re.compile(r"( [*_]{2}[^*_]+?[*_]{2} )")
+	boldItalicRegex = re.compile(r"( [*_]{3}[^*_]+?[*_]{3} )")
 	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
 	headerRegex     = re.compile(r"^(#{1,6} .+)")
 	codeRegex       = re.compile(r"(```.*```)")
@@ -133,7 +133,14 @@ def create_page(request):
 	if request.method == "POST" and form.is_valid():
 		title = form.cleaned_data["pageTitle"]
 		content = form.cleaned_data["pageContent"]
-		util.save_entry(title, content)
+
+		# These qutation characters were causing problems
+		# replace them with a "normal" version
+		content = content.replace("“", "\"")
+		content = content.replace("”", "\"")
+		content = content.replace("’", "'")
+
+		util.save_entry(title, content.replace("\r\n", "\n"))
 
 		return HttpResponseRedirect(title)
 
@@ -142,7 +149,6 @@ def create_page(request):
 	})
 
 def edit(request, title):
-	print(title)
 	form = EditPageForm(request.POST or {
 		"pageContent": open(f"entries/{title}.md", "r").read()
 	})
@@ -157,7 +163,6 @@ def edit(request, title):
 	})
 
 def search_results(request):
-	print("fetching results")
 	allPages = util.list_entries()
 
 	search = request.GET.get("q")
