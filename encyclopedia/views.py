@@ -1,15 +1,38 @@
 import re, random
 from django.http.response import HttpResponseRedirect
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
 from django.shortcuts import render
 from django import forms
 
 from . import util
 
+def validate_unique(value):
+	if value in util.list_entries():
+		raise ValidationError(
+			_('%(value)s page already exists'),
+			params={'value': value},
+		)
+
 class CreatePageForm(forms.Form):
-	pageTitle = forms.CharField(label="")
-	pageContent = forms.CharField(label="", widget=forms.Textarea(attrs={
-		"placeholder": "Page content:"
-	}))
+	pageTitle = forms.CharField(
+		label="", validators=[validate_unique],
+		widget=forms.TextInput(
+			attrs= {
+				"placeholder": "Page title:",
+				"margin-bottom": "5px;"
+			}
+		)
+	)
+
+	pageContent = forms.CharField(
+		label="", widget=forms.Textarea(
+			attrs={
+				"placeholder": "Page content:",
+				"margin-bottom": "5px;"
+			}
+		)
+	)
 
 def index(request):
 	return render(request, "encyclopedia/index.html", {
@@ -100,8 +123,6 @@ def random_page(request):
 
 def create_page(request):
 	form = CreatePageForm(request.POST or None)
-
-	# TODO: error message when trying to create a page that already exists
 
 	if request.method == "POST" and form.is_valid():
 		title = form.cleaned_data["pageTitle"]
