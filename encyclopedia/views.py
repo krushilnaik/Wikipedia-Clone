@@ -58,15 +58,14 @@ def entry(request, title):
 	headerRegex     = re.compile(r"^(#{1,6} .+)")
 	codeRegex       = re.compile(r"(```.*?```)")
 
-	regexList = [
-		anchorRegex,
-		boldItalicRegex,
+	masterRegex = [
+		anchorRegex, boldItalicRegex,
 		boldRegex, italicRegex,
 		headerRegex, listItemRegex,
 		codeRegex
 	]
 
-	masterRegex = "|".join([regex.pattern for regex in regexList])
+	masterRegex = "|".join([regex.pattern for regex in masterRegex])
 	masterRegex = re.compile(masterRegex)
 
 	content = ""
