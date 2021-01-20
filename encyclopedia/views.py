@@ -18,18 +18,18 @@ class CreatePageForm(forms.Form):
 	pageTitle = forms.CharField(
 		label="", validators=[validate_unique],
 		widget=forms.TextInput(
-			attrs= {
+			attrs = {
 				"placeholder": "Page title:",
-				"margin-bottom": "5px;"
+				"style": "width: 20em; margin-bottom: 5px;"
 			}
 		)
 	)
 
 	pageContent = forms.CharField(
 		label="", widget=forms.Textarea(
-			attrs={
+			attrs = {
 				"placeholder": "Page content:",
-				"margin-bottom": "5px;"
+				"style": "margin-bottom: 5px;"
 			}
 		)
 	)
