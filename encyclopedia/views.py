@@ -155,3 +155,22 @@ def edit(request, title):
 	return render(request, "encyclopedia/edit_page.html", {
 		"form": form
 	})
+
+def search_results(request):
+	print("fetching results")
+	allPages = util.list_entries()
+
+	search = request.GET.get("q")
+
+	if search in allPages:
+		return HttpResponseRedirect(search)
+
+	results = []
+
+	for page in allPages:
+		if search in page:
+			results.append(page)
+	
+	return render(request, "encyclopedia/search_results.html", {
+		"results": results
+	})
