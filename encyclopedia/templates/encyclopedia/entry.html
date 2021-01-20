@@ -7,3 +7,9 @@
 {% block body %}
 	{{ content|safe }}
 {% endblock %}
+
+{% block nav %}
+	<div>
+		<a href="/wiki/{{title}}/edit">Edit This Page</a>
+	</div>
+{% endblock %}

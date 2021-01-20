@@ -34,6 +34,12 @@ class CreatePageForm(forms.Form):
 		)
 	)
 
+class EditPageForm(forms.Form):
+	pageContent = forms.CharField(
+		label="",
+		widget=forms.Textarea()
+	)
+
 def index(request):
 	return render(request, "encyclopedia/index.html", {
 		"entries": util.list_entries()
@@ -132,5 +138,20 @@ def create_page(request):
 		return HttpResponseRedirect(title)
 
 	return render(request, "encyclopedia/create_page.html", {
+		"form": form
+	})
+
+def edit(request, title):
+	print(title)
+	form = EditPageForm(request.POST or {
+		"pageContent": open(f"entries/{title}.md", "r").read()
+	})
+
+	if request.method == "POST" and form.is_valid():
+		util.save_entry(title, form.cleaned_data["pageContent"].replace("\r\n", "\n"))
+
+		return entry(request, title)
+	
+	return render(request, "encyclopedia/edit_page.html", {
 		"form": form
 	})
