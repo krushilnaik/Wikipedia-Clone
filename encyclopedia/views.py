@@ -54,11 +54,14 @@ def entry(request, title):
 	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
 	headerRegex     = re.compile(r"^(#{1,6} .+)")
 	codeRegex       = re.compile(r"(```.*?```)")
+	taskRegex       = re.compile(r"(\[[ x]\])")
+	strikeRegex     = re.compile(r"(~~[^ ].*[^ ]~~)")
 
 	masterRegex = [
 		anchorRegex, boldItalicRegex,
 		boldRegex, italicRegex,
-		codeRegex
+		codeRegex, taskRegex,
+		strikeRegex
 	]
 
 	masterRegex = "|".join([regex.pattern for regex in masterRegex])
