@@ -168,8 +168,8 @@ def edit(request, title):
 	if request.method == "POST" and form.is_valid():
 		util.save_entry(title, form.cleaned_data["pageContent"].replace("\r\n", "\n"))
 
-		return entry(request, title)
-	
+		return HttpResponseRedirect(reverse("entry", args=[title]))
+
 	return render(request, "encyclopedia/edit_page.html", {
 		"form": form
 	})
