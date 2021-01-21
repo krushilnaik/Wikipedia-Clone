@@ -83,6 +83,8 @@ def entry(request, title):
 			if headerRegex.match(match):
 				cutoff = match.index("# ") + 1
 				htmlBuilder += createTag(f"h{cutoff}", match[cutoff+1:])
+			elif taskRegex.match(match):
+				htmlBuilder += f"<input type='checkbox' disabled {'checked' if match[1] == 'x' else ''}>"
 			elif boldItalicRegex.match(match):
 				htmlBuilder += createTag(
 					"strong",
@@ -96,6 +98,8 @@ def entry(request, title):
 				text = match[1:match.index("]")]
 				link = match[match.index("(")+1:-1]
 				htmlBuilder += createTag("a", text, href=link)
+			elif strikeRegex.match(match):
+				htmlBuilder += createTag("del", match[2:-2])
 			elif codeRegex.match(match):
 				htmlBuilder += createTag("code", match[3:-3])
 			else:
