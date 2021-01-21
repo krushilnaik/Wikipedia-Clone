@@ -48,9 +48,9 @@ def index(request):
 
 def entry(request, title):
 	anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
-	italicRegex     = re.compile(r"([*_]{1}[^*_]+?[*_]{1})")
-	boldRegex       = re.compile(r"([*_]{2}[^*_]+?[*_]{2})")
-	boldItalicRegex = re.compile(r"([*_]{3}[^*_]+?[*_]{3})")
+	italicRegex     = re.compile(r"([*_][^ ]{1}[^*_]+?[^ ][*_]{1})")
+	boldRegex       = re.compile(r"([*_][^ ]{2}[^*_]+?[^ ][*_]{2})")
+	boldItalicRegex = re.compile(r"([*_][^ ]{3}[^*_]+?[^ ][*_]{3})")
 	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
 	headerRegex     = re.compile(r"^(#{1,6} .+)")
 	codeRegex       = re.compile(r"(```.*?```)")
