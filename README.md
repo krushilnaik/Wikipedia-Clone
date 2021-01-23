@@ -24,8 +24,6 @@ Complete the implementation of your Wiki encyclopedia. You must fulfill the foll
 - [x] **Challenge for those more comfortable**: If you're feeling more comfortable, try implementing the Markdown to HTML conversion without using any external libraries, supporting headings, boldface text, unordered lists, links, and paragraphs. You may find using regular expressions in Python helpful.
 
 # Bugs
-Bold and/or italic markdown is parsed as any combination of * and _ (i.e. ```*_this would be valid__```)
-
 Doesn't support multiline markdowns, e.g.:
 ```
 something
