@@ -1,5 +1,8 @@
 # krushilnaik
-Complete the implementation of your Wiki encyclopedia. You must fulfill the following requirements:
+
+### The second assignment of Harvard CS50's "Web Programming with Python and JavaScript" 2020. This is an attempt to replicate Wikipedia's resourcefulness at a much smaller scale.
+
+# 
 
 - [x] **Entry Page**: Visiting ```/wiki/TITLE```, where ```TITLE``` is the title of an encyclopedia entry, should render a page that displays the contents of that encyclopedia entry.
   - [x] The view should get the content of the encyclopedia entry by calling the appropriate ```util``` function.
@@ -23,9 +26,11 @@ Complete the implementation of your Wiki encyclopedia. You must fulfill the foll
 - [x] **Markdown to HTML Conversion**: On each entry's page, any Markdown content in the entry file should be converted to HTML before being displayed to the user. You may use the ```python-markdown2``` package to perform this conversion, installable via ```pip3 install markdown2```.
 - [x] **Challenge for those more comfortable**: If you're feeling more comfortable, try implementing the Markdown to HTML conversion without using any external libraries, supporting headings, boldface text, unordered lists, links, and paragraphs. You may find using regular expressions in Python helpful.
 
-# Bugs
-Doesn't support multiline markdowns, e.g.:
+# "Bugs"
+Since this uses a custom markdown parser, only explicitly required syntax are currently supported, i.e.
+
 ```
-something
-like this
+This doesn't work
 ```
+
+I'll try to add the rest post submission since it's not required for grading
