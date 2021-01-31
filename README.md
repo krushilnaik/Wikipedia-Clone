@@ -27,10 +27,12 @@
 - [x] **Challenge for those more comfortable**: If you're feeling more comfortable, try implementing the Markdown to HTML conversion without using any external libraries, supporting headings, boldface text, unordered lists, links, and paragraphs. You may find using regular expressions in Python helpful.
 
 # "Bugs"
-Since this uses a custom markdown parser, only explicitly required syntax are currently supported, i.e.
+<!-- Since this uses a custom markdown parser, only explicitly required syntax are currently supported, i.e.
 
 ```
 This doesn't work
 ```
 
-I'll try to add the rest post submission since it's not required for grading
+I'll try to add the rest post-submission since it's not required for grading -->
+
+Switched to markdown2 for submission's sake, will work on my own converter when I get around to it.

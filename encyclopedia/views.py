@@ -1,4 +1,5 @@
 import re, random
+import markdown2
 
 from django.http.response import HttpResponseRedirect
 from django.core.exceptions import ValidationError
@@ -48,100 +49,113 @@ def index(request):
 	})
 
 def entry(request, title):
-	anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
-	# italicRegex     = re.compile(r"((?P<i>\*{1}|_{1})[^ ][^*_]+?[^ ](?P=i))")
-	# boldRegex       = re.compile(r"((?P<b>\*{2}|_{2})[^ ][^*_]+?[^ ](?P=b))")
-	# boldItalicRegex = re.compile(r"((?P<bi>\*{3}|_{3})[^ ][^*_]+?[^ ](?P=bi))")
-	italicRegex     = re.compile(r"(\*{1}[^ ][^*]+?[^ ]\*{1}|_{1}[^ ][^_]+?[^ ]_{1})")
-	boldRegex       = re.compile(r"(\*{2}[^ ][^*]+?[^ ]\*{2}|_{2}[^ ][^_]+?[^ ]_{2})")
-	boldItalicRegex = re.compile(r"(\*{3}[^ ][^*]+?[^ ]\*{3}|_{3}[^ ][^_]+?[^ ]_{3})")
-	listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
-	headerRegex     = re.compile(r"^(#{1,6} .+)")
-	codeRegex       = re.compile(r"(```.*?```)")
-	taskRegex       = re.compile(r"(\[[ x]\])")
-	strikeRegex     = re.compile(r"(~~[^ ].*[^ ]~~)")
+	# anchorRegex     = re.compile(r"(\[.+?\]\(.+?\))")
+	# imageRegex     = re.compile(r"([!]\[.+?\]\(.+?\))")
+	# # italicRegex     = re.compile(r"((?P<i>\*{1}|_{1})[^ ][^*_]+?[^ ](?P=i))")
+	# # boldRegex       = re.compile(r"((?P<b>\*{2}|_{2})[^ ][^*_]+?[^ ](?P=b))")
+	# # boldItalicRegex = re.compile(r"((?P<bi>\*{3}|_{3})[^ ][^*_]+?[^ ](?P=bi))")
+	# italicRegex     = re.compile(r"(\*{1}[^ ][^*]+?[^ ]\*{1}|_{1}[^ ][^_]+?[^ ]_{1})")
+	# boldRegex       = re.compile(r"(\*{2}[^ ][^*]+?[^ ]\*{2}|_{2}[^ ][^_]+?[^ ]_{2})")
+	# boldItalicRegex = re.compile(r"(\*{3}[^ ][^*]+?[^ ]\*{3}|_{3}[^ ][^_]+?[^ ]_{3})")
+	# listItemRegex   = re.compile(r"^( *[*-]{1} .+)")
+	# headerRegex     = re.compile(r"^(#{1,6} .+)")
+	# codeRegex       = re.compile(r"(```.*?```)")
+	# taskRegex       = re.compile(r"(\[[ x]\])")
+	# strikeRegex     = re.compile(r"(~~[^ ].*[^ ]~~)")
 
-	masterRegex = [
-		anchorRegex, boldItalicRegex,
-		boldRegex, italicRegex,
-		codeRegex, taskRegex,
-		strikeRegex
-	]
+	# masterRegex = [
+	# 	anchorRegex, imageRegex,
+	# 	boldItalicRegex,
+	# 	boldRegex, italicRegex,
+	# 	codeRegex, taskRegex,
+	# 	strikeRegex
+	# ]
 
-	masterRegex = "|".join([regex.pattern for regex in masterRegex])
-	masterRegex = re.compile(masterRegex)
+	# masterRegex = "|".join([regex.pattern for regex in masterRegex])
+	# masterRegex = re.compile(masterRegex)
 
 
-	def createTag(tagType, content, **kwargs):
-		attributes = " ".join([f"{k}=\"{v}\"" for k, v in kwargs.items()])
-		return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
+	# def createTag(tagType, content, **kwargs):
+	# 	attributes = " ".join([f"{k}=\"{v}\"" for k, v in kwargs.items()])
+	# 	return f"<{tagType}{' ' + attributes if attributes else ''}>{content}</{tagType}>"
 
-	def parseLine(raw_string):
-		htmlBuilder = ""
+	# def parseLine(raw_string):
+	# 	htmlBuilder = ""
 
-		matches = masterRegex.split(raw_string)
+	# 	matches = masterRegex.split(raw_string)
 
-		for match in matches:
-			if not match:
-				continue
-			if headerRegex.match(match):
-				cutoff = match.index("# ") + 1
-				htmlBuilder += createTag(f"h{cutoff}", match[cutoff+1:])
-			elif taskRegex.match(match):
-				htmlBuilder += f"<input type='checkbox' disabled {'checked' if match[1] == 'x' else ''}>"
-			elif boldItalicRegex.match(match):
-				htmlBuilder += createTag(
-					"strong",
-					createTag("em", match.strip()[3:-3])
-				)
-			elif boldRegex.match(match):
-				htmlBuilder += createTag("strong", match.strip()[2:-2])
-			elif italicRegex.match(match):
-				htmlBuilder += createTag("em", match.strip()[1:-1])
-			elif anchorRegex.match(match):
-				text = match[1:match.index("]")]
-				link = match[match.index("(")+1:-1]
-				htmlBuilder += createTag("a", text, href=link)
-			elif strikeRegex.match(match):
-				htmlBuilder += createTag("del", match[2:-2])
-			elif codeRegex.match(match):
-				htmlBuilder += createTag("code", match[3:-3])
-			else:
-				htmlBuilder += createTag("span", match)
+	# 	for match in matches:
+	# 		if not match:
+	# 			continue
+	# 		if headerRegex.match(match):
+	# 			cutoff = match.index("# ") + 1
+	# 			htmlBuilder += createTag(f"h{cutoff}", match[cutoff+1:])
+	# 		elif taskRegex.match(match):
+	# 			htmlBuilder += f"<input type='checkbox' disabled {'checked' if match[1] == 'x' else ''}>"
+	# 		elif boldItalicRegex.match(match):
+	# 			htmlBuilder += createTag(
+	# 				"strong",
+	# 				createTag("em", match.strip()[3:-3])
+	# 			)
+	# 		elif boldRegex.match(match):
+	# 			htmlBuilder += createTag("strong", match.strip()[2:-2])
+	# 		elif italicRegex.match(match):
+	# 			htmlBuilder += createTag("em", match.strip()[1:-1])
+	# 		elif imageRegex.match(match):
+	# 			text = match[2:match.index("]")]
+	# 			link = match[match.index("(")+1:-1]
+	# 			htmlBuilder += createTag(
+	# 				"img",
+	# 				src=link,
+	# 				alt = text
+	# 			)
+	# 		elif anchorRegex.match(match):
+	# 			text = match[1:match.index("]")]
+	# 			link = match[match.index("(")+1:-1]
+	# 			htmlBuilder += createTag("a", text, href=link)
+	# 		elif strikeRegex.match(match):
+	# 			htmlBuilder += createTag("del", match[2:-2])
+	# 		elif codeRegex.match(match):
+	# 			htmlBuilder += createTag("code", match[3:-3])
+	# 		else:
+	# 			htmlBuilder += createTag("span", match)
 
-		return htmlBuilder
+	# 	return htmlBuilder
 
-	content = ""
-	data = util.get_entry(title).split("\n")
-	previousListLevel = 0
+	# content = ""
+	# data = util.get_entry(title).split("\n")
+	# previousListLevel = 0
 
-	for line in data:
-		if not line.rstrip():
-			continue
-		if previousListLevel != 0 or listItemRegex.match(line):
-			currentListLevel = 0
-			while line[currentListLevel] == " ":
-				currentListLevel += 1
-			currentListLevel //= 2
-			if currentListLevel > previousListLevel:
-				content += "<ul>"
-			elif currentListLevel < previousListLevel:
-				content += "</ul>"
-			content += createTag(
-				"li",
-				parseLine(line[currentListLevel*2+2:])
-			)
-			previousListLevel = currentListLevel
-		elif previousListLevel != 0:
-			for _ in range(previousListLevel + 1):
-				previousListLevel -= 1
-				content += "</ul>"
-		else:
-			content += createTag("div", parseLine(line))
+	# for line in data:
+	# 	if not line.rstrip():
+	# 		continue
+	# 	if previousListLevel != 0 or listItemRegex.match(line):
+	# 		currentListLevel = 0
+	# 		while line[currentListLevel] == " ":
+	# 			currentListLevel += 1
+	# 		currentListLevel //= 2
+	# 		if currentListLevel > previousListLevel:
+	# 			content += "<ul>"
+	# 		elif currentListLevel < previousListLevel:
+	# 			content += "</ul>"
+	# 		content += createTag(
+	# 			"li",
+	# 			parseLine(line[currentListLevel*2+2:])
+	# 		)
+	# 		previousListLevel = currentListLevel
+	# 	elif previousListLevel != 0:
+	# 		for _ in range(previousListLevel + 1):
+	# 			previousListLevel -= 1
+	# 			content += "</ul>"
+	# 	else:
+	# 		content += createTag("div", parseLine(line))
+
+	rawMarkdown = util.get_entry(title)
+	html = markdown2.markdown(rawMarkdown)
 
 	return render(request, "encyclopedia/entry.html", {
 		"title": title,
-		"content": content
+		"content": html
 	})
 
 def random_page(request):
