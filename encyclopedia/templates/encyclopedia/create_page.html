@@ -1,0 +1,11 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %} Create Page {% endblock %}
+
+{% block body %}
+	<form style="display: flex; flex-direction: column;" action="" method="post">
+		{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="Create Page" style="width: fit-content; justify-self: right; margin: 5px;">
+	</form>
+{% endblock %}
